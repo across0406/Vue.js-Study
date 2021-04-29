@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <title>Example7</title>
+    </head>
+    <body>
+        <!--
+            Components in Vue is Vue instance has predefined options.
+            How to register component in vue is simple like to the following: 
+            e.g.
+                Vue.component('todo-item', {
+                    template: '<li> is one of todo list element.</li>'
+                })
+
+                var app = new Vue(...)
+
+                <ol>
+                    Instanciation todo-item component.
+                    <todo-item>
+                        ...
+                    </todo-item>
+                </ol>
+
+            There is a virtual example for the shape of application used component division.
+            
+            e.g.
+                <div id="app">
+                    <app-nav></app-nav>
+                    <app-view>
+                        <app-sidebar></app-sidebar>
+                        <app-content></app-content>
+                    </app-view>
+                </div>
+        -->
+        <div id="app-7">
+            <ol>
+                <todo-item
+                    v-for="item in groceryList"
+                    v-bind:todo="item"
+                    v-bind:key="item.id"
+                ></todo-item>
+            </ol>
+        </div>
+
+        <script>
+            Vue.component('todo-item', {
+                props: ['todo'],
+                template: '<li>{{ todo.text }}</li>'
+            })
+
+            var app7 = new Vue({
+                el: '#app-7',
+                data: {
+                    groceryList: [
+                        { id: 0, text: 'Vegetables' },
+                        { id: 1, text: 'Cheese' },
+                        { id: 2, text: 'Whatever else humans are supposed to eat' }
+                    ]
+                }
+            })
+        </script>
+    </body>
+</html>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <title>Vue Instance Example</title>
+    </head>
+    <body>
+        <!--
+            Generate Vue Instance
+            All Vue application starts with instanciate new vuew instance.
+            MVVM design pattern affected Vue design. 
+            As this effect, often use 'vm' variable for referencing Vue instances.
+
+            When generate Vue instance, should transfer option object.
+            Can check all option list on https://kr.vuejs.org/v2/api/#propsData.
+
+            Vue application consists of root Vue instance generated through new Vue.
+            For example, Todo application component tree is to the following:
+
+            Root Instance
+                TodoList
+                    TodoItem
+                        DeleteTodoButton
+                        EditTodoButton
+                    TodoListFooter
+                        ClearTodoButton
+                        TodoListStatistics
+            
+            Data & Method
+            When a Vue instance is generated, all attributes in data object are attached responsive system of Vue.
+            If each attribute value is changed, the view also responses and updates reflection the changed value itself.
+            
+            When data value is changed, the screen is rendered again.
+            The attributes in data are only resposive if each attribute exists when generating Vue instance.
+
+            On the other hand, there is opposite sight to be not responsive.
+            It is using Object.freeze(). When this method is used, the responsive system cannot trace it.
+            
+            There are some instance attributes and methods, such as $data, $el, $watch, etc.
+
+            If a method in method object uses 'this' keyword, 'this' meaning is its vue instance.
+
+            Instance Life-Cycle Hook
+            When each Vue instance is generated, it goes through an initialization step.
+            e.g. Data Watch, Compile template, Mount instance to DOM, Update DOM because of being changed data, etc.
+            
+            In such these step, lifecycle hook is also called which operates user defined logic.
+            For example, "created" hook is called after an instance is generated.
+
+                new Vue({
+                  data: {
+                      a: 1
+                  }, 
+                  created: function() {
+                      console.log('a is ' + this.a)
+                  }
+                })
+
+            There are other hooks, such as mounted, updated, destroyed, and etc.
+            All lifecycle hooks are called while pointing Vue instance called by this context.
+            Where is "controller" on Vue world? There is no "controller".
+            User defined logics are divided as such lifecycle hooks.
+
+            Lifecycle Diagram
+            https://kr.vuejs.org/v2/guide/instance.html
+        -->
+        <div id="vm-1">
+            <b>Just watch the change of a's value</b>
+            <p>
+                a = {{ a }}
+            </p>
+            <span>
+                <button v-on:click="changeA">random a</button>
+            </span>
+        </div>
+
+        <div id="vm-2">
+            <b>Cannot change visitCount because second data is freezed!</b>
+            <p>
+                visitCount = {{ visitCount }}
+            </p>
+            <span>
+                <button v-on:click="changeVisitCount">random visitCount</button>
+            </span>
+        </div>
+
+        <div id="vm-3">
+            <b>Watch the change of a's value and using '$'</b>
+            <p>
+                a = {{ a }}
+            </p>
+            <p>
+                dataMessage = {{ dataMessage }}
+            </p>
+            <p>
+                elMessage = {{ elMessage }}
+            </p>
+            <p>
+                watchMessage = {{ watchMessage }}
+            </p>
+            <span>
+                <button v-on:click="changeA">random a</button>
+                <button v-on:click="dollarComparison">Dollars</button>
+            </span>
+        </div>
+
+        <div id="vm-4">
+            <b>Watch lifecycle hooks are called</b>
+            <p>
+                a = {{ a }}
+            </p>
+        </div>
+
+        <script>
+            // Data object
+            var data1 = { a: 1 }
+            var method1 = {
+                changeA: function(){
+                    this.a = Math.random();
+                }
+            }
+            var data2 = {
+                newTodoText: '', 
+                visitCount: 0,
+                hideCompletedTodods: false,
+                todos: [],
+                error: null
+            }
+            var method2 = {
+                changeVisitCount: function(){
+                    this.visitCount = Math.floor(Math.random() * 100);
+                }
+            }
+            var data3 = { a: 1, dataMessage: 'nothing', elMessage: 'nothing', watchMessage: 'nothing' }
+            var method3 = {
+                changeA: function(){
+                    this.a = Math.random();
+                },
+                dollarComparison: function(){
+                    this.dataMessage = String(this.$data === data3);
+                    this.elMessage = String(this.$el === document.getElementById('vm-3'));
+                }
+            }
+            var data4 = { a:1 }
+            var method4 = {}
+
+
+            // Register data object to Vue instance
+            var vm1 = new Vue({
+                el: '#vm-1', 
+                data: data1,
+                methods: method1
+            })
+
+            Object.freeze(data2)
+
+            var vm2 = new Vue({
+                el: '#vm-2', 
+                data: data2, 
+                methods: method2
+            })
+
+            var vm3 = new Vue({
+                el: '#vm-3',
+                data: data3,
+                methods: method3
+            })
+            
+            var vm4 = new Vue({
+                el: '#vm-4',
+                data: data4,
+                created: function() {
+                    this.a = 'created hook is called.'
+                }
+            })
+
+            vm3.$watch('a', function(newVal, oldVal){
+                this.watchMessage = 'newVal = ' + newVal + ', oldVal = ' + oldVal;
+            })
+        </script>
+    </body>
+</html>

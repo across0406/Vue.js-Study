@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <title>Example2</title>
+</head>
+<body>
+    <!--
+        v-bind attribute => directive
+        "directive" represents a special attribute of Vue as being attached "v-" prefix.
+        It makes the page work responsive. 
+        So "v-bind" let the attribute in "" keep up to data into specific attribute.
+    -->
+    <div id="app-2">
+        <span v-bind:title="message">
+            이 위에 잠시 마우스를 올리면 동적으로 바인딩 된 title을 볼 수 있습니다!
+        </span>
+    </div>
+
+    <script>
+        var app2 = new Vue({
+            el: '#app-2',
+            data: {
+                message: '이 페이지는 ' + new Date() + ' 에 로드.'
+            }
+        })
+    </script>
+</body>
+</html>
