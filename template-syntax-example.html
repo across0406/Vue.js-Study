@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <title>Vue Instance Example</title>
+    </head>
+    <body>
+        <!--
+            Template Syntax
+            Vue.js uses HTML-based template syntax that helps rendered DOM to be binded default Vue instance data declaratively.
+            ALl Vue.js templates are effective HTML documents that can be parsed by compatible browsers and HTML parser.
+            Vue compiles these templates into virtual DOM rendering methods in internally.
+            Vue combined to responsive system can seize minimal components, which frames DOM minimally when application status is changed and applies again.
+
+            Interpolation
+            # String
+            Default type of data binding is text interpolation using "Mustache" syntax ( double nested braces ).
+            Mustache tag is replaced to the attribute value of its msg of data instance.
+            Also it is updated when the value is changed.
+            There is the way to operate interpolation once using "v-ones" directive, but be careful.
+            Using the directive affects to the binding of same node.
+
+            # Primitive HTML
+            Mustaches interprets HTML as normal text. If want to display real HTML, must use "v-html" directive.
+            At this time, there is no data binding.
+            In contrast, it is often suggested using default unit for construct and re-using when a component is used.
+
+            # Attribute
+            Mustaches must not be used on HTML attributes.
+            At this time, use "v-bind" directive substitutially.
+            But when use boolean attribute and the boolean is true, "v-bind" is operated different.
+            e.g. <div v-bind:id="dynamicId"></div> <button v-bind:disabled="isButtonDisabled">Button</button>
+
+            # Using JavaScript Expression
+            Vue.js supports all functions of JavaScript expression in all data binding.
+            The expression is calculated as JavaScript within data range of Vue instance.
+            There is only one limit. It should be included only one expression on each binding.
+            e.g.
+            Good usage:
+                {{ number + 1 }}
+                {{ ok ? 'YES' : 'NO' }}
+                {{ message.split('').reverse().join('') }}
+                <div v-bind:id="'list-' + id"></div>
+
+            Bad usage:
+                {{ var a = 1 }}
+                {{ if (ok) { return message } }}
+
+            # Directive
+            The value of directive attribute becomes single JavaScript expression except for "v-for".
+            The role is to apply side-effect to DOM responsively when the expression's value is changed.
+            e.g.
+                <p v-if="seen">이제 나를 볼 수 있어요.</p>
+
+            # Pass Argument
+            A part of directives is used with some pass arguments represented ":".
+            e.g.
+                <a v-bind:href="url">...</a>
+                <a v-on:click="doSomething">...</a>
+            
+            # Dynamic Pass Argument
+            From 2.6.0 version, it is available to use pass argument through JavaScript expression with "[, ]". 
+            e.g.
+                <a v-bind:[attributeName]="url">...</a>
+                
+            # Modifier
+            As modifier is special suffix notated '.', it describes to have to bind directive more specific way.
+
+            Abbreviation
+            There are two abbreviations for "v-bind" and "v-on".
+            v-bind => [void]
+            v-on: => @
+        -->
+        <h1>Interpolation</h1>
+
+        <div id="vm-1">
+            <b># String</b>
+            <p>
+                메시지: {{ message }}
+            </p>
+            <p v-once>
+                 변경되지 않는 메시지: {{ noChangedMessage }}
+            </p>
+        </div>
+
+        <div id="vm-2">
+            <b># Primitive HTML</b>
+            <p>
+                Using mustaches: {{ rawHtml }}
+            </p>
+            <p>
+                Using v-html directive: <span v-html="rawHtml"></span>
+            </p>
+        </div>
+
+        <div id="vm-3">
+            <b># Attribute</b>
+            <div v-bind:id="dynamicId">
+                Id: {{ dynamicId }}
+            </div>
+            <button v-bind:disabled="isButtonDisabled">isDisabled? {{ isButtonDisabled }}</button>
+        </div>
+
+        <div id="vm-4">
+            <b># Using JavaScript Expression</b>
+            <p>
+                number + 1 = {{ number + 1 }}
+            </p>
+            <p>
+                isOK = {{ ok ? 'YES' : 'NO' }}
+            </p>
+            <p>
+                {{ message }}.reverse => {{ message.split('').reverse().join('') }}
+            </p>
+            <div v-bind:id="'list-' + id">
+                list-id = {{ id }}
+            </div>
+        </div>
+
+        <div id="vm-5">
+            <b># Directive</b>
+            <p v-if="seen">이제 나를 볼 수 있어요.</p>
+        </div>
+
+        <div id="vm-6">
+            <b># Pass Arguments</b>
+            <p>
+                <a v-bind:href="urlName + '.html'">go to other example</a>
+            </p>
+            <a v-on:click="doSomething" v-bind:href="urlName + '.html'">{{ doSomthingMessage }}</a>
+        </div>
+
+        <div id="vm-7">
+            <form action="template-syntax-example.html" v-on:submit.prevent="onSubmit">
+                <div>
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" />
+                </div>
+                <div>
+                    <label for="mail">E-mail:</label>
+                    <input type="email" id="mail" />
+                </div>
+                <div>
+                    <label for="msg">Message:</label>
+                    <textarea id="msg"></textarea>
+                </div>
+            </form>
+        </div>
+
+        <div id="vm-8">
+            <b>Abbreviations</b>
+            <p>
+                <a :href="urlName + '.html'">abbbreviation go to other example</a>
+            </p>
+            <p>
+                <a @click="doSomething" :href="urlName + '.html'">{{ doSomthingMessage }}</a>
+            </p>
+        </div>
+
+        <script>
+            var data = {
+                message: 'Available to be changed.',
+                noChangedMessage: 'Unavailable to be changed.',
+                rawHtml: '<b>This should be bold.</b>',
+                dynamicId: 'vm-3-inner',
+                isButtonDisabled: true,
+                number: 10,
+                ok: true,
+                id: 1,
+                seen: true,
+                urlName: 'template-syntax-example',
+                doSomthingMessage: 'Do anything!',
+                dynamicArgument: "href"
+            }
+            var methods = {
+                doSomething: function(){
+                    doSomthingMessage = 'Done!'
+                },
+                onSubmit: function(){
+
+                }
+            }
+
+            var vm = new Vue({
+                el: '#vm-1',
+                data: data,
+                methods: methods
+            })
+
+            var vm2 = new Vue({
+                el: '#vm-2',
+                data: data,
+                methods: methods
+            })
+
+            var vm3 = new Vue({
+                el: '#vm-3',
+                data: data,
+                methods: methods
+            })
+
+            var vm4 = new Vue({
+                el: '#vm-4',
+                data: data,
+                methods: methods
+            })
+
+            var vm5 = new Vue({
+                el: '#vm-5',
+                data: data,
+                methods: methods
+            })
+
+            var vm6 = new Vue({
+                el: '#vm-6',
+                data: data,
+                methods: methods
+            })
+
+            var vm7 = new Vue({
+                el: '#vm-7',
+                data: data,
+                methods: methods
+            })
+
+            var vm8 = new Vue({
+                el: '#vm-8',
+                data: data,
+                methods: methods
+            })
+        </script>
+    </body>
+</html>
