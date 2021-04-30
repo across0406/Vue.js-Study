@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <title>Vue Instance Example</title>
+    </head>
+    <body>
+        <!--
+            "computed" property stores ( caches ) the value according to the dependent
+            object. So, when the dependent object is not changed, it returns pre-caculated
+            value.
+            
+            "watch" property is more common "computed" property. It is useful to be
+            used on some situations, such as asynchronous response, time-consuming
+            operation, etc.
+        -->
+        <h1>Computed & Watch</h1>
+
+        <div id="vm-1">
+            <b># computed</b>
+            <p>
+                original message:
+                {{ message }}
+            </p>
+            <p>
+                reversed message:
+                {{ reversedMessage }}
+            </p>
+            <p>
+                only first character from message:
+                {{ firstCharacterMessage }}
+            </p>
+        </div>
+
+        <div id="vm-2">
+            <b># computed VS watch</b>
+            <p>
+                watchFullName:
+                {{ watchFullName }}
+            </p>
+            <p>
+                computedFullName:
+                {{ computedFullName }}
+            </p>
+            <p>
+                firstName:
+                {{ firstName }}
+            </p>
+            <p>
+                lastName:
+                {{ lastName }}
+            </p>
+        </div>
+
+        <div id="vm-3">
+            <b># computed Getter Setter</b>
+            <p>
+                FullName:
+                {{ fullName }}
+            </p>
+            <p>
+                firstName:
+                {{ firstName }}
+            </p>
+            <p>
+                lastName:
+                {{ lastName }}
+            </p>
+        </div>
+        <div id="vm-4">
+            <b># watch</b>
+            <p>
+                Please ask question available to answer into Yes/No: 
+                <input v-model="question">
+            </p>
+            <p>Answer: {{ answer }}</p>
+        </div>
+        <script src="https://unpkg.com/axios@0.12.0/dist/axios.min.js"></script>
+        <script src="https://unpkg.com/lodash@4.13.1/lodash.min.js"></script>
+        <script>
+            var data = {
+                message: 'Hello.',
+                firstName: 'Foo',
+                lastName: 'Bar',
+                watchFullName: 'Foo Bar'
+            }
+
+            var computed = {
+                reversedMessage: function () {
+                    return this
+                        .message
+                        .split('')
+                        .reverse()
+                        .join('');
+                },
+                firstCharacterMessage: function () {
+                    return this
+                        .message
+                        .split('')[0];
+                },
+                computedFullName: function () {
+                    return this.firstName + ' ' + this.lastName;
+                },
+                fullName: {
+                    get: function () {
+                        return this.firstName + ' ' + this.lastName;
+                    },
+                    set: function (newValue) {
+                        var names = newValue.split(' ');
+                        this.firstName = names[0];
+                        this.lastName = names[names.length - 1];
+                    }
+                }
+            }
+
+            var watch = {
+                firstName: function (val) {
+                    this.watchFullName = val + ' ' + this.lastName;
+                },
+                lastName: function (val) {
+                    this.watchFullName = this.FirstName + ' ' + firstName;
+                }
+            }
+
+            var methods = {}
+
+            var vm = new Vue(
+                {el: '#vm-1', data: data, computed: computed, methods: methods}
+            )
+
+            var vm2 = new Vue(
+                {el: '#vm-2', data: data, computed: computed, watch: watch, methods: methods}
+            )
+
+            var vm3 = new Vue(
+                {el: '#vm-3', data: data, computed: computed, watch: watch, methods: methods}
+            )
+
+            var vm4 = new Vue({
+                el: '#vm-4',
+                data: {
+                    question: '',
+                    answer: 'Cannot answer before asking question.'
+                },
+                watch: {
+                    question: function (newQuestion) {
+                        this.answer = 'Waiting input...';
+                        this.debouncedGetAnswer();
+                    }
+                },
+                created: function () {
+                    // _.debounce는 lodash가 제공하는 기능으로 특히 시간이 많이 소요되는 작업을 실행할 수 있는 빈도를 제한합니다. 이 경우,
+                    // 우리는 yesno.wtf/api 에 액세스 하는 빈도를 제한하고, 사용자가 ajax요청을 하기 전에 타이핑을 완전히 마칠 때까지 기다리길
+                    // 바랍니다. _.debounce 함수(또는 이와 유사한 _.throttle)에 대한 자세한 내용을 보려면
+                    // https://lodash.com/docs#debounce 를 방문하세요.
+                    this.debouncedGetAnswer = _.debounce(this.getAnswer, 500);
+                },
+                methods: {
+                    getAnswer: function () {
+                        if (this.question.indexOf('?') === -1) {
+                            this.answer = "Question includes '?' commonly.";
+                        } else {
+                            this.answer = 'While thinking...'
+
+                            var vm = this;
+                            axios
+                                .get('https://yesno.wtf/api')
+                                .then(function (response) {
+                                    vm.answer = _.capitalize(response.data.answer);
+                                })
+                                .catch(function (error) {
+                                    vm.answer = 'Error! There is an error for API request.' + error
+                                })
+                            }
+                    }
+                }
+            })
+        </script>
+    </body>
+</html>
