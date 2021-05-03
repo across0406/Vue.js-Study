@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <title>Class and Style Binding Example</title>
+    </head>
+    <body>
+        <!--
+            Class & Style Binding
+            - Binding HTML Classes
+            # Object Syntax
+            Can forward objects to "v-bind:class" for toggle the class dynamically.
+
+            # Array Syntax
+            As forwarding an array to "v-bind:class", can assign classes list.
+        -->
+        <div id="vm-1" v-bind:class="classObject">
+            <b>- Binding HTML Classses</b>
+            <b># Object Syntax</b>
+            <li v-for="(value, key) in classObject">
+                {{ key }} + ", " + {{ value }}
+            </li>
+        </div>
+        <script>
+
+            var ids = {
+                'classObject': '#vm-1'
+            }
+
+            var data = {
+                isActive: true, 
+                error: null
+            };
+
+            var computed = {
+                classObject: function(){
+                    return {
+                        active: this.isActive && !this.error, 
+                        'text-danger': this.error && this.error.type === 'fatal'
+                    }
+                }
+            }
+
+            var methods = {};
+
+            var vm1 = new Vue({
+                el: ids['classObject'],
+                data: data,
+                computed: computed,
+                methods: methods
+            });
+        </script>
+    </body>
+</html>
