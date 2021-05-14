@@ -9,8 +9,12 @@
 </head>
 <body>
     <div id="app">
+        <ul>
+            <p v-for"item in list">
+                {{ item }}
+            </p>
+        </ul>
     </div>
-
     <script>
         function factory_music(title){
             return {
@@ -23,6 +27,16 @@
             }
         }
 
+        function acc_tracks(){
+            var arr = [];
+
+            for(var key in arguments){
+                arr.push(arguments[key]);
+            }
+
+            return arr;
+        }
+
         homura = factory_music('Homura');
         gurenge = factory_music('Gurenge');
         // alert(homura.get_title());
@@ -32,7 +46,7 @@
         // alert(gurenge.get_title());
 
         var tracks = ['Starlight', '生命のアリア', 'ブルーデイジー', '雨上がりのパレード'];
-        var arr = []
+        var arr = [];
 
         for(var i = 0;i < 4;i++){
             arr[i] = function(id){
@@ -46,11 +60,17 @@
             console.log(index, arr[index]);
         }
 
+        var acc_arr = acc_tracks(tracks[0], tracks[1], tracks[2], tracks[3]);
+
+        var data = { items: [] };
+
         var app = new Vue({
             el: '#app',
             data: {
-            }
-        })
+                list: [acc_arr[0], acc_arr[1], acc_arr[2], acc_arr[3]],
+            },
+            template: '<div id="app"><ul><p v-for"item in list">{{ item }}</p></ul></div>',
+        });
     </script>
 </body>
 </html>
