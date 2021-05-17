@@ -4,6 +4,14 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mocha/3.2.0/mocha.js"></script>
+        <script>
+            mocha.setup('bdd');
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/chai/3.5.0/chai.js"></script>
+        <script>
+            let assert = chai.assert;
+        </script>
         <script src="alert.js"></script>
         <script src="variable-constant.js"></script>
         <script src="data-type.js"></script>
@@ -12,12 +20,32 @@
         <script src="basic-operator-with-math.js"></script>
         <script src="lambda-expression.js"></script>
         <script src="object-basic.js"></script>
+        <script src="test-automation.js"></script>
         <title>JavaScript Basic</title>
     </head>
     <body>
         <script>
             // Hello World
             // alert('Hello World!');
+
+            function power(x, n){
+                let acc = 1.0;
+
+                if ( n < 0 ){
+                    acc = NaN;
+                } else {
+                    for (let i = 0;i < n;i++){
+                        acc *= x;
+                    }
+                }
+
+                return acc;
+            }
+        </script>
+        <div id="mocha">
+        </div>
+        <script>
+            mocha.run();
         </script>
     </body>
 </html>
