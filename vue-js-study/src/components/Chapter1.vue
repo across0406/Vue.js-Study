@@ -18,17 +18,14 @@
         <button v-on:click="buttonClick">
             Hey, click me!
         </button>
-        <!--
-            It is not yet to synchronize data and input form.
-        -->
         <p>
             {{ ch1Sec5Message }}
         </p>
-        <input v-model="ch1Sec5Message">
+        <input v-bind:value="ch1Sec5Message" @input="updateCh1Sec5Message">
         <p v-if="ch1Sec5Show">
             It is showed!
         </p>
-        <button v-on:click="ch1Sec5TransitionShow = !ch1Sec5TransitionShow">
+        <button v-on:click="setCh1Sec5TransitionShow(!ch1Sec5TransitionShow)">
             Transition Show 변경!
         </button>
         <transition>

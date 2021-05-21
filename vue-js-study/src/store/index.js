@@ -10,9 +10,10 @@ export default new Vuex.Store({
       ch1Sec5Message: 'Initial Message',
       ch1Sec5Show: true,
       ch1Sec5TransitionShow: true,
+      ch8Sec42Count: 0,
     },
     mutations: {
-        setCh1Sec5Message(state, message) {
+        updateCh1Sec5Message(state, message) {
             state.ch1Sec5Message = message;
         },
 
@@ -26,6 +27,10 @@ export default new Vuex.Store({
 
         setCh1Sec5TransitionShow(state, show) {
             state.ch1Sec5TransitionShow = show;
+        },
+
+        increment(state) {
+            state.ch8Sec42Count++;
         },
     },
     actions: {
